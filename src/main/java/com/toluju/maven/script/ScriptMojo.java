@@ -34,18 +34,20 @@ public class ScriptMojo extends AbstractMojo {
   public void execute() throws MojoExecutionException {
     StringBuilder builder = new StringBuilder();
 
-    Iterator iterator = null;
+    Set classPathElements = new LinkedHashSet();
     
     try {
-      iterator = project.getRuntimeClasspathElements().iterator();
+      classPathElements.addAll(project.getRuntimeClasspathElements());
+      classPathElements.addAll(project.getTestClasspathElements());
     }
     catch (Exception e) {
-      throw new MojoExecutionException("Exception getting runtime classpath elements", e);
+      throw new MojoExecutionException("Exception getting classpath elements", e);
     }
 
+    Iterator iterator = classPathElements.iterator();
+
     while (iterator.hasNext()) {
-      String element = (String) iterator.next();
-      builder.append(element);
+      builder.append(iterator.next());
       builder.append(File.pathSeparator);
     }
 
