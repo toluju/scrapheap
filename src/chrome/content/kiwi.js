@@ -21,11 +21,12 @@ function loadTweets() {
     username: username,
     password: password,
     success: function(msg) {
-      var box = $("#tweetlist");
+      var doc = $("#tweetbrowser")[0].contentDocument;
+      var list = $("#tweetlist", doc);
   
       for (m in msg) {
         var tweet = msg[m];
-        box.append($.create("description").setVal(tweet.text));
+        $("<li>" + tweet.text + "</li>", doc).appendTo(list);
       }
     }
   });
