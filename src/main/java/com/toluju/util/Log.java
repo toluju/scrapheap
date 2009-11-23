@@ -1,10 +1,7 @@
 package com.toluju.util;
 
-import java.util.*;
-import java.text.*;
-
+import java.text.MessageFormat;
 import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
 
 public class Log {
   protected static Boolean configured = new Boolean(false);
@@ -70,6 +67,6 @@ public class Log {
     Log log = new Log(Log.class);
 
     log.info("Testing some logging: {0} {1}", new Integer(10), log);
-    log.warn("Warning!");
+    log.warn("Warning! {0} {1} {2}", "Test1", 2, null);
   }
 }
