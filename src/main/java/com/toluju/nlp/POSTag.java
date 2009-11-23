@@ -4,6 +4,7 @@ package com.toluju.nlp;
  * @author Toby
  */
 public enum POSTag {
+  UNKNOWN,
   TICKQUOT,
   DBLDASH,
   COMMA,

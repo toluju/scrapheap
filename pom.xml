@@ -40,6 +40,10 @@
               <scriptName>postaggerTest</scriptName>
               <className>com.toluju.nlp.POSTagger</className>
             </script>
+            <script>
+              <scriptName>postaggerScore</scriptName>
+              <className>com.toluju.nlp.BrownPOSScorer</className>
+            </script>
           </scripts>
         </configuration>
       </plugin>

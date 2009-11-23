@@ -1,6 +1,5 @@
 package com.toluju.nlp;
 
-import com.google.common.collect.HashMultimap;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.toluju.util.Log;
@@ -11,9 +10,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.Collection;
 import java.util.zip.GZIPInputStream;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.LineIterator;
@@ -41,8 +38,13 @@ public class POSTagger {
     while (iterator.hasNext()) {
       String line = iterator.nextLine();
       String[] splits = line.split("\\s");
-      for (int x = 1; x < splits.length; ++x)
-        lexiconMap.put(splits[0], POSTag.fromString(splits[x]));
+      for (int x = 1; x < splits.length; ++x) {
+        POSTag tag = POSTag.fromString(splits[x]);
+        if (tag == null)
+          log.warn("Unknown tag: {0}", splits[x]);
+        else
+          lexiconMap.put(splits[0], tag);
+      }
     }
 
     iterator.close();
@@ -51,7 +53,20 @@ public class POSTagger {
 
   public void process(Document doc) {
     for (Token token : doc) {
-      token.setPOSTag(lexiconMap.get(token.asString()).iterator().next());
+      String tokenStr = token.asString();
+      Collection<POSTag> possibleTags = lexiconMap.get(tokenStr);
+
+      if (possibleTags.isEmpty()) {
+        if (tokenStr.length() > 0 && Character.isUpperCase(tokenStr.charAt(0))) {
+          token.setPOSTag(POSTag.NNP);
+        }
+        else {
+          token.setPOSTag(POSTag.UNKNOWN);
+        }
+      }
+      else {
+        token.setPOSTag(possibleTags.iterator().next());
+      }
     }
   }
 
